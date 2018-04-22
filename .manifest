@@ -1,0 +1,10 @@
+{
+	"platforms": ["web", "android"],
+	"minify": true,
+	"templater": "jinja2",
+	"properties": {
+		"title": "nightowl",
+		"version": "0.0.1",
+		"description": "nightowl"
+	}
+}
