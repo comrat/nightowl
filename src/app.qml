@@ -4,9 +4,6 @@ Rectangle {
 
 	ColorTheme { id: colorTheme; }
 
-	WebSocketServer { id: server; }
-	WebSocketClient { id: client; }
-
 	WorkArea { }
 
 	Head {
