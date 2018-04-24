@@ -1,7 +1,7 @@
 Rectangle {
 	property int maxWidth: 900;
 	width: parent.width > maxWidth ? maxWidth : parent.width;
-	height: 95%;
+	height: parent.width > maxWidth ? 95% : 100%;
 	anchors.horizontalCenter: parent.horizontalCenter;
 	color: colorTheme.workAreaColor;
 
