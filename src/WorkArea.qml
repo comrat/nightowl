@@ -1,7 +1,8 @@
 Rectangle {
 	property int maxWidth: 900;
+	y: 50;
 	width: parent.width > maxWidth ? maxWidth : parent.width;
-	height: parent.width > maxWidth ? 95% : 100%;
+	height: parent.height - 50;
 	anchors.horizontalCenter: parent.horizontalCenter;
 	color: colorTheme.workAreaColor;
 
@@ -11,12 +12,25 @@ Rectangle {
 	PositionMixin { value: PositionMixin.Fixed; }
 
 	PageStack {
+		id: contentStack;
 		width: 100%;
 		height: 100%;
 
 		StartPage {
-			onJoin: { /*TODO: impl*/ }
-			onCreate: { /*TODO: impl*/ }
+			onJoin: { contentStack.joinThread() }
+			onCreate: { contentStack.startThread() }
+		}
+
+		Thread {
+			id: thread;
+		}
+
+		startThread: {
+			this.currentIndex = 1
+		}
+
+		joinThread: {
+			this.currentIndex = 1
 		}
 	}
 }
