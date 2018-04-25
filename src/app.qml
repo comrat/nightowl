@@ -9,4 +9,6 @@ Rectangle {
 	Head {
 		onMenuPressed: { /*TODO: impl*/ }
 	}
+
+	onBackPressed: { _globals.closeApp() }
 }
