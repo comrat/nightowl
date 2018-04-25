@@ -14,13 +14,22 @@ Item {
 		delegate: Rectangle {
 			x: model.currentUser ? 45% : 5%;
 			width: 50%;
-			height: message.height + 10;
+			height: message.height + 10 + (userName.text ? 30 : 0);
 			color: model.currentUser ? colorTheme.accentColor : colorTheme.messageColor;
 			radius: 5;
 
 			Text {
-				id: message;
+				id: userName;
 				y: 5;
+				x: 5%;
+				font.pixelSize: 18;
+				color: colorTheme.accentTextColor;
+				text: model.currentUser ? "" : model.name;
+			}
+
+			Text {
+				id: message;
+				y: 5 + (userName.text ? 30 : 0);
 				x: 5%;
 				width: 90%;
 				font.pixelSize: 18;
@@ -40,15 +49,17 @@ Item {
 		color: colorTheme.textArea;
 
 		TextAreaInput {
+			id: messageInput;
 			width: 100% - parent.height;
 			font.pixelSize: 18;
-			color: colorTheme.textArea;
+			backgroundColor: colorTheme.textArea;
 		}
 
 		WebItem {
 			x: parent.width - width;
 			width: height;
 			height: parent.height;
+			visible: messageInput.text;
 
 			Image {
 				x: 10%;
@@ -59,16 +70,9 @@ Item {
 			}
 
 			onClicked: {
-				messagesModel.append({ "text": "11111 2222 33 44444 111111 44444 000", "name": "user", "currentUser": true })
+				messagesModel.append({ "text": messageInput.text, "name": "user", "currentUser": true })
+				messageInput.text = ""
 			}
 		}
-	}
-
-	onCompleted: {
-		var data = [
-			{ "text": "11111 2222 33 44444 111111 44444 000", "name": "user", "currentUser": true },
-			{ "text": "Testmessage ololo", "name": "user", "currentUser": false }
-		]
-		messagesModel.append(data)
 	}
 }

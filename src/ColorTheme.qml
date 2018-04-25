@@ -6,6 +6,7 @@ Object {
 	property Color accentColor: "#455A64";
 	property Color messageColor: "#78909C";
 
+	property Color accentTextColor: "#A7FFEB";
 	property Color textColor: "#ffffff";
 	property Color textArea: "#ffffff";
 }
