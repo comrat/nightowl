@@ -1,5 +1,8 @@
 Object {
 	id: serverProto;
+	signal message;
+	signal userConnected;
+	signal userDisconnected;
 	property bool started;
 	property bool autostart;
 	property string ip;
@@ -13,10 +16,11 @@ Object {
 	}
 
 	send(msg): {
-		log("Send", msg, "strted", this.started, "server", this._wsserver, "user", this._user)
-		if (!this.started || !this._wsserver || !this._user)
-			return
-		this._wsserver.send({'uuid': this._user.uuid}, msg)
+		// log("Send", msg, "strted", this.started, "server", this._wsserver, "user", this._user)
+		// if (!this.started || !this._wsserver || !this._user)
+		// 	return
+		// this._wsserver.send({'uuid': this._user.uuid}, msg)
+		//TODO: reimplement
 	}
 
 	start: {
@@ -37,13 +41,14 @@ Object {
 			}),
 			'onOpen': context.wrapNativeCallback(function(user) {
 				log('A user connected:', user);
-				self._user = user
+				self.userConnected(user)
 			}),
 			'onMessage': context.wrapNativeCallback(function(conn, msg) {
-				log(conn, msg);
+				self.message(msg, con)
 			}),
 			'onClose': context.wrapNativeCallback(function(conn, code, reason, wasClean) {
 				log('A user disconnected from %s', conn.remoteAddr);
+				self.userDisconnected(conn, code, reason, wasClean)
 			})
 		}, context.wrapNativeCallback(function onStart(addr, port) {
 			log('Listening on address', addr, "port", port);

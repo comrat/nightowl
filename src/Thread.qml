@@ -1,4 +1,5 @@
 Item {
+	property bool server;
 	width: 100%;
 	height: 100%;
 
