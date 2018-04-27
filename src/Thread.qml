@@ -1,4 +1,6 @@
 Item {
+	id: threadProto;
+	signal sendMessage;
 	property bool server;
 	width: 100%;
 	height: 100%;
@@ -14,10 +16,19 @@ Item {
 		model: messagesModel;
 		delegate: Rectangle {
 			x: model.currentUser ? 45% : 5%;
-			width: 50%;
-			height: message.height + 10 + (userName.text ? 30 : 0);
-			color: model.currentUser ? colorTheme.accentColor : colorTheme.messageColor;
+			width: model.newUser ? 100% : 50%;
+			height: model.newUser ? newUserText.height : (message.height + 10 + (userName.text ? 30 : 0));
+			color: model.newUser ? "#0000" : (model.currentUser ? colorTheme.accentColor : colorTheme.messageColor);
 			radius: 5;
+
+			Text {
+				id: newUserText;
+				width: 100%;
+				horizontalAlignment: Text.AlignHCenter;
+				font.pixelSize: 18;
+				color: colorTheme.headColor;
+				text: model.newUser ? model.newUser + " rolled in" : "";
+			}
 
 			Text {
 				id: userName;
@@ -25,7 +36,7 @@ Item {
 				x: 5%;
 				font.pixelSize: 18;
 				color: colorTheme.accentTextColor;
-				text: model.currentUser ? "" : model.name;
+				text: model.currentUser || !model.name ? "" : model.name;
 			}
 
 			Text {
@@ -36,7 +47,7 @@ Item {
 				font.pixelSize: 18;
 				color: colorTheme.textColor;
 				wrapMode: Text.WordWrap;
-				text: model.text;
+				text: model.text ? model.text : "";
 			}
 		}
 
@@ -72,8 +83,19 @@ Item {
 
 			onClicked: {
 				messagesModel.append({ "text": messageInput.text, "name": "user", "currentUser": true })
+				threadProto.sendMessage(messageInput.text)
 				messageInput.text = ""
 			}
 		}
+	}
+
+	receiveMessage(msg, user): {
+		log("receiveMessage", msg, user)
+		messagesModel.append({ "text": msg, "name": user.remoteAddr, "currentUser": false })
+	}
+
+	userConnected(user): {
+		log("userConnected", user)
+		messagesModel.append({ "newUser": user.remoteAddr })
 	}
 }

@@ -8,12 +8,10 @@ Object {
 	property string port;
 	property string host: "ws://" + ip + ":" + port;
 
-	pressKey(key): {
-		var keyCode = _globals.core.getKeyCodeByName(key)
-		if (keyCode) {
-			var event = { keyCode : keyCode , timeStamp: new Date().getTime() }
-			this.parent._context.processKey(event)
-		}
+	send(msg): {
+		log("send:", this.connected)
+		if (this.connected)
+			this._socket.send(msg)
 	}
 
 	connect: {
@@ -47,5 +45,7 @@ Object {
 				self.pressKey(data.key)
 			self.message(data)
 		})
+
+		this._socket = socket
 	}
 }

@@ -43,8 +43,8 @@ Object {
 				log('A user connected:', user);
 				self.userConnected(user)
 			}),
-			'onMessage': context.wrapNativeCallback(function(conn, msg) {
-				self.message(msg, con)
+			'onMessage': context.wrapNativeCallback(function(user, msg) {
+				self.message(msg, user)
 			}),
 			'onClose': context.wrapNativeCallback(function(conn, code, reason, wasClean) {
 				log('A user disconnected from %s', conn.remoteAddr);

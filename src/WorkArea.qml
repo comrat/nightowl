@@ -10,12 +10,12 @@ Rectangle {
 		id: server;
 		port: "1471";
 
-		onMessage(msg, con): { log("Message", msg, con) }
-		onUserConnected(user): { log("onUserConnected", user) }
+		onMessage(msg, con): { thread.receiveMessage(msg, con) }
+		onUserConnected(user): { thread.userConnected(user) }
 		onUserDisconnected(user, code, reason, wasClean): { log("onUserDisconnected", user, code, reason, wasClean) }
 	}
 
-	WebSocketClient { id: client; ip: "192.168.0.101"; port: "1471"; }
+	WebSocketClient { id: client; }
 
 	PositionMixin { value: PositionMixin.Fixed; }
 
@@ -29,13 +29,20 @@ Rectangle {
 			onCreate: { contentStack.startThread() }
 		}
 
-		Thread { id: thread; }
+		Thread {
+			id: thread;
+
+			onSendMessage(msg): { client.send(msg) }
+		}
 
 		ConnectPage {
-			onConnected: {
+			onConnect(ip, port): {
+				client.ip = ip
+				client.port = port
 				client.connect()
 				thread.server = false
-				this.currentIndex = 1
+				log("CONNEC")
+				contentStack.currentIndex = 1
 			}
 		}
 
@@ -45,11 +52,6 @@ Rectangle {
 			server.start()
 		}
 
-		// joinThread: { this.currentIndex = 2 }
-		joinThread: {
-			client.connect()
-			thread.server = false
-			this.currentIndex = 1
-		}
+		joinThread: { this.currentIndex = 2 }
 	}
 }
