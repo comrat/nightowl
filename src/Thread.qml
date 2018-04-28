@@ -1,7 +1,7 @@
 Item {
 	id: threadProto;
 	signal sendMessage;
-	property bool server;
+	property bool serverSide;
 	width: 100%;
 	height: 100%;
 
@@ -16,9 +16,9 @@ Item {
 		model: messagesModel;
 		delegate: Rectangle {
 			x: model.currentUser ? 45% : 5%;
-			width: model.newUser ? 100% : 50%;
-			height: model.newUser ? newUserText.height : (message.height + 10 + (userName.text ? 30 : 0));
-			color: model.newUser ? "#0000" : (model.currentUser ? colorTheme.accentColor : colorTheme.messageColor);
+			width: model.newUser || model.userLeave ? 100% : 50%;
+			height: model.newUser || model.userLeave ? newUserText.height : (message.height + 10 + (userName.text ? 30 : 0));
+			color: model.newUser || model.userLeave ? "#0000" : (model.currentUser ? colorTheme.accentColor : colorTheme.messageColor);
 			radius: 5;
 
 			Text {
@@ -27,7 +27,7 @@ Item {
 				horizontalAlignment: Text.AlignHCenter;
 				font.pixelSize: 18;
 				color: colorTheme.headColor;
-				text: model.newUser ? model.newUser + " rolled in" : "";
+				text: model.newUser ? "Meet the " + model.newUser : (model.userLeave ? model.userLeave + " leaved" : "");
 			}
 
 			Text {
@@ -90,12 +90,16 @@ Item {
 	}
 
 	receiveMessage(msg, user): {
-		log("receiveMessage", msg, user)
-		messagesModel.append({ "text": msg, "name": user.remoteAddr, "currentUser": false })
+		messagesModel.append({ "text": msg, "name": user.remoteAddr || user.name, "currentUser": false })
 	}
 
 	userConnected(user): {
 		log("userConnected", user)
 		messagesModel.append({ "newUser": user.remoteAddr })
+	}
+
+	userDisconnected(user, code, reason, wasClean): {
+		log("userDisconnected", user)
+		messagesModel.append({ "userLeave": user.remoteAddr })
 	}
 }

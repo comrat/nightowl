@@ -12,10 +12,14 @@ Rectangle {
 
 		onMessage(msg, con): { thread.receiveMessage(msg, con) }
 		onUserConnected(user): { thread.userConnected(user) }
-		onUserDisconnected(user, code, reason, wasClean): { log("onUserDisconnected", user, code, reason, wasClean) }
+		onUserDisconnected(user, code, reason, wasClean): { thread.userDisconnected(user, code, reason, wasClean) }
 	}
 
-	WebSocketClient { id: client; }
+	WebSocketClient {
+		id: client;
+
+		onMessage(msg, con): { thread.receiveMessage(msg, con) }
+	}
 
 	PositionMixin { value: PositionMixin.Fixed; }
 
@@ -32,7 +36,13 @@ Rectangle {
 		Thread {
 			id: thread;
 
-			onSendMessage(msg): { client.send(msg) }
+			onSendMessage(msg): {
+				log("sendmess", this.server, "func", server.sendMessage, "server", server)
+				if (this.serverSide)
+					server.sendMessage(msg)
+				else
+					client.send(msg)
+			}
 		}
 
 		ConnectPage {
@@ -40,14 +50,14 @@ Rectangle {
 				client.ip = ip
 				client.port = port
 				client.connect()
-				thread.server = false
+				thread.serverSide = false
 				log("CONNEC")
 				contentStack.currentIndex = 1
 			}
 		}
 
 		startThread: {
-			thread.server = true
+			thread.serverSide = true
 			this.currentIndex = 1
 			server.start()
 		}

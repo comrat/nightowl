@@ -15,12 +15,16 @@ Object {
 		onTriggered: { this.parent.start() }
 	}
 
-	send(msg): {
-		// log("Send", msg, "strted", this.started, "server", this._wsserver, "user", this._user)
-		// if (!this.started || !this._wsserver || !this._user)
-		// 	return
-		// this._wsserver.send({'uuid': this._user.uuid}, msg)
-		//TODO: reimplement
+	sendMessage(msg): {
+		log("send:", this.started, "user", this._users)
+		if (!this.started)
+			return
+
+		var users = this._users
+		for (var i in users) {
+			log("User", users[i])
+			this._wsserver.send(users[i], { "message": msg, "user": { "name": "OP" } })
+		}
 	}
 
 	start: {
@@ -34,6 +38,8 @@ Object {
 		var wsserver = window.cordova.plugins.wsserver;
 		var port = this.port
 		var self = this
+		var users = {}
+
 		wsserver.start(port, {
 			'onFailure': context.wrapNativeCallback(function(addr, port, reason) {
 				log('Stopped listening on %s:%d. Reason: %s', addr, port, reason);
@@ -41,14 +47,15 @@ Object {
 			}),
 			'onOpen': context.wrapNativeCallback(function(user) {
 				log('A user connected:', user);
+				users[user.uuid] = user
 				self.userConnected(user)
 			}),
 			'onMessage': context.wrapNativeCallback(function(user, msg) {
 				self.message(msg, user)
 			}),
-			'onClose': context.wrapNativeCallback(function(conn, code, reason, wasClean) {
-				log('A user disconnected from %s', conn.remoteAddr);
-				self.userDisconnected(conn, code, reason, wasClean)
+			'onClose': context.wrapNativeCallback(function(user, code, reason, wasClean) {
+				log('A user disconnected from %s', user.remoteAddr);
+				self.userDisconnected(user, code, reason, wasClean)
 			})
 		}, context.wrapNativeCallback(function onStart(addr, port) {
 			log('Listening on address', addr, "port", port);
@@ -67,7 +74,8 @@ Object {
 			}
 		}))
 
-		parent._wsserver = wsserver
+		this._wsserver = wsserver
+		this._users = users
 	}
 
 	onCompleted: { if (this.autostart) startDelayTimer.restart() }

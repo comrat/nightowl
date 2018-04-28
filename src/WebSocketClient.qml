@@ -9,7 +9,7 @@ Object {
 	property string host: "ws://" + ip + ":" + port;
 
 	send(msg): {
-		log("send:", this.connected)
+		log("send:", this.connected, "socket", this._socket)
 		if (this.connected)
 			this._socket.send(msg)
 	}
@@ -41,9 +41,8 @@ Object {
 
 		socket.onmessage = context.wrapNativeCallback(function(event) {
 			var data = JSON.parse(event.data)
-			if (self.emulateKeyPressing && data && data.key)
-				self.pressKey(data.key)
-			self.message(data)
+			log("Message", data)
+			self.message(data.message, data.user)
 		})
 
 		this._socket = socket
