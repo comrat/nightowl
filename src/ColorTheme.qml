@@ -9,4 +9,5 @@ Object {
 	property Color accentTextColor: "#A7FFEB";
 	property Color textColor: "#ffffff";
 	property Color textArea: "#ffffff";
+	property Color bottomTextColor: "#cccccc";
 }

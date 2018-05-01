@@ -47,7 +47,7 @@ Item {
 			}
 
 			onClicked: {
-				messagesModel.append({ "text": messageInput.text, "name": "user", "currentUser": true })
+				messagesModel.append({ "text": messageInput.text, "name": "user", "currentUser": true, "time": threadProto.getCurrentTime() })
 				threadProto.sendMessage(messageInput.text)
 				messageInput.text = ""
 			}
@@ -55,12 +55,19 @@ Item {
 	}
 
 	receiveMessage(msg, user): {
-		messagesModel.append({ "text": msg, "name": user.remoteAddr || user.name, "currentUser": false })
+		messagesModel.append({ "text": msg, "name": user.remoteAddr || user.name, "currentUser": false, "time": this.getCurrentTime() })
 	}
 
 	userConnected(user): {
 		log("userConnected", user)
 		messagesModel.append({ "newUser": user.remoteAddr })
+	}
+
+	getCurrentTime: {
+		var now = new Date()
+		var h = now.getHours()
+		var m = now.getMinutes()
+		return (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m)
 	}
 
 	userDisconnected(user, code, reason, wasClean): {

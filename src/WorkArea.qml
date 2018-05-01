@@ -37,7 +37,6 @@ Rectangle {
 			id: thread;
 
 			onSendMessage(msg): {
-				log("sendmess", this.server, "func", server.sendMessage, "server", server)
 				if (this.serverSide)
 					server.sendMessage(msg)
 				else
@@ -51,7 +50,6 @@ Rectangle {
 				client.port = port
 				client.connect()
 				thread.serverSide = false
-				log("CONNEC")
 				contentStack.currentIndex = 1
 			}
 		}

@@ -33,4 +33,13 @@ Rectangle {
 		wrapMode: Text.WordWrap;
 		text: model.text ? model.text : "";
 	}
+
+	Text {
+		anchors.right: parent.right;
+		anchors.bottom: parent.bottom;
+		anchors.margins: 5;
+		font.pixelSize: 12;
+		color: colorTheme.bottomTextColor;
+		text: model.time ? model.time : "";
+	}
 }
