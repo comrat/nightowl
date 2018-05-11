@@ -4,6 +4,8 @@ Rectangle {
 
 	ColorTheme { id: colorTheme; }
 
+	Device { id: device; }
+
 	WorkArea { }
 
 	Head {
@@ -11,4 +13,9 @@ Rectangle {
 	}
 
 	onBackPressed: { _globals.closeApp() }
+
+	onCompleted: {
+		if (device.lockOrientation)
+			device.lockOrientation("portrait-primary")
+	}
 }
