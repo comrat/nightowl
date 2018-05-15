@@ -10,6 +10,7 @@ Rectangle {
 		id: webRtc;
 
 		onMessage(message): { log("Msg", message) }
+		onServerStarted(link): { log("Server started", link) }
 	}
 
 	PositionMixin { value: PositionMixin.Fixed; }
@@ -44,6 +45,7 @@ Rectangle {
 		startThread: {
 			thread.serverSide = true
 			this.currentIndex = 1
+			webRtc.createThread()
 		}
 
 		joinThread: { this.currentIndex = 2 }

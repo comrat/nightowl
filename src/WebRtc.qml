@@ -1,15 +1,19 @@
 Object {
-	signame message;
+	signal message;
+	signal serverStarted;
 	property bool activeDataChannel;
 
-	createThread(callback): {
+	Base64 { id: base64; }
+
+	createThread: {
 		var serverHost = this._serverHost
 		var dataChannel = serverHost.createDataChannel('test', {reliable: true})
 		var self = this
+		var context = this._context
 		this.activeDataChannel = dataChannel
 
-		dataChannel.onopen = function(e) { log("Data channel opened", e) }
-		dataChannel.onmessage = function(e) {
+		dataChannel.onopen = context.wrapNativeCallback(function(e) { log("Data channel opened", e) })
+		dataChannel.onmessage = context.wrapNativeCallback(function(e) {
 			if (e.data.size) {
 				//TODO: imple file transmission
 				// fileReceiver1.receive(e.data, {})
@@ -25,7 +29,7 @@ Object {
 					self.message(data)
 				}
 			}
-		}
+		})
 
 		serverHost.createOffer(
 			function(desc) { serverHost.setLocalDescription(desc, function() {}, function() {}) },
@@ -38,12 +42,13 @@ Object {
 		var cfg = { 'iceServers': [{'url': "stun:stun.gmx.net"}] }
 		var con = { 'optional': [{'DtlsSrtpKeyAgreement': true}] }
 		this._serverHost = new RTCPeerConnection(cfg, con)
-		var serverHost = this.serverHost
-		serverHost.onicecandidate = function (e) {
+		var serverHost = this._serverHost
+		var self = this
+		serverHost.onicecandidate = this._context.wrapNativeCallback(function(e) {
 			log("onicecandidate", e)
 			if (e.candidate == null)
-				log("Got description", serverHost.localDescription)
-		}
+				self.serverStarted(base64.encode(JSON.stringify(serverHost.localDescription)))
+		})
 		this.activeDataChannel = false
 	}
 }
