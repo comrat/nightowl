@@ -6,19 +6,10 @@ Rectangle {
 	anchors.horizontalCenter: parent.horizontalCenter;
 	color: colorTheme.workAreaColor;
 
-	WebSocketServer {
-		id: server;
-		port: "1471";
+	WebRtc {
+		id: webRtc;
 
-		onMessage(msg, con): { thread.receiveMessage(msg, con) }
-		onUserConnected(user): { thread.userConnected(user) }
-		onUserDisconnected(user, code, reason, wasClean): { thread.userDisconnected(user, code, reason, wasClean) }
-	}
-
-	WebSocketClient {
-		id: client;
-
-		onMessage(msg, con): { thread.receiveMessage(msg, con) }
+		onMessage(message): { log("Msg", message) }
 	}
 
 	PositionMixin { value: PositionMixin.Fixed; }
@@ -37,10 +28,6 @@ Rectangle {
 			id: thread;
 
 			onSendMessage(msg): {
-				if (this.serverSide)
-					server.sendMessage(msg)
-				else
-					client.send(msg)
 			}
 		}
 
@@ -57,7 +44,6 @@ Rectangle {
 		startThread: {
 			thread.serverSide = true
 			this.currentIndex = 1
-			server.start()
 		}
 
 		joinThread: { this.currentIndex = 2 }
