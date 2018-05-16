@@ -38,6 +38,11 @@ Object {
 		)
 	}
 
+	pasteInvite(offer): {
+		var offerDesc = new RTCSessionDescription(JSON.parse(base64.decode(offer)))
+		log("Offer", offerDesc)
+	}
+
 	onCompleted: {
 		var cfg = { 'iceServers': [{'url': "stun:stun.gmx.net"}] }
 		var con = { 'optional': [{'DtlsSrtpKeyAgreement': true}] }
@@ -50,5 +55,8 @@ Object {
 				self.serverStarted(base64.encode(JSON.stringify(serverHost.localDescription)))
 		})
 		this.activeDataChannel = false
+
+
+		this._clientHost = new RTCPeerConnection(cfg, con)
 	}
 }

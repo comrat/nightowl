@@ -1,6 +1,6 @@
 Rectangle {
 	x: model.currentUser ? 45% : 5%;
-	width: model.newUser || model.userLeave ? 100% : 50%;
+	width: model.newUser || model.userLeave ? 100% : 65%;
 	height: model.newUser || model.userLeave ? newUserText.height : (message.height + 20 + (userName.text ? 30 : 0));
 	color: model.newUser || model.userLeave ? "#0000" : (model.currentUser ? colorTheme.accentColor : colorTheme.messageColor);
 	radius: 5;

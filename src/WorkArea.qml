@@ -35,13 +35,7 @@ Rectangle {
 		}
 
 		ConnectPage {
-			onConnect(ip, port): {
-				client.ip = ip
-				client.port = port
-				client.connect()
-				thread.serverSide = false
-				contentStack.currentIndex = 1
-			}
+			onPasteInvite(invite): { webRtc.pasteInvite(invite) }
 		}
 
 		startThread: {
