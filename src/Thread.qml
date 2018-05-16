@@ -9,14 +9,12 @@ Item {
 
 	ListView {
 		width: 100%;
-		anchors.bottom: parent.bottom;
-		anchors.bottomMargin: 60;
-		height: contentHeight;
+		height: parent.height - 60;
+		contentFollowsCurrentItem: false;
+		nativeScrolling: true;
 		spacing: 10;
 		model: messagesModel;
 		delegate: ThreadMessageDelegate { }
-
-		Behavior on contentHeight { Animation { duration: 300; } }
 	}
 
 	Rectangle {
@@ -55,7 +53,10 @@ Item {
 	}
 
 	receiveMessage(msg, user): {
-		messagesModel.append({ "text": msg, "name": user.remoteAddr || user.name, "currentUser": false, "time": this.getCurrentTime() })
+		if (user)
+			messagesModel.append({ "text": msg, "name": user.remoteAddr || user.name, "currentUser": false, "time": this.getCurrentTime() })
+		else
+			messagesModel.append({ "text": msg, "name": "user", "currentUser": false, "time": this.getCurrentTime() })
 	}
 
 	userConnected(user): {

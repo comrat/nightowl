@@ -1,7 +1,7 @@
 Rectangle {
 	x: model.currentUser ? 45% : 5%;
 	width: model.newUser || model.userLeave ? 100% : 50%;
-	height: model.newUser || model.userLeave ? newUserText.height : (message.height + 10 + (userName.text ? 30 : 0));
+	height: model.newUser || model.userLeave ? newUserText.height : (message.height + 20 + (userName.text ? 30 : 0));
 	color: model.newUser || model.userLeave ? "#0000" : (model.currentUser ? colorTheme.accentColor : colorTheme.messageColor);
 	radius: 5;
 
@@ -30,7 +30,7 @@ Rectangle {
 		width: 90%;
 		font.pixelSize: 18;
 		color: colorTheme.textColor;
-		wrapMode: Text.WordWrap;
+		wrapMode: Text.WrapAnywhere;
 		text: model.text ? model.text : "";
 	}
 
@@ -41,5 +41,7 @@ Rectangle {
 		font.pixelSize: 12;
 		color: colorTheme.bottomTextColor;
 		text: model.time ? model.time : "";
+
+		UserSelectMixin { }
 	}
 }

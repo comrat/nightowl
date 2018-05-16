@@ -10,7 +10,10 @@ Rectangle {
 		id: webRtc;
 
 		onMessage(message): { log("Msg", message) }
-		onServerStarted(link): { log("Server started", link) }
+		onServerStarted(link): {
+			log("Server started", link)
+			thread.receiveMessage("Share this string to invite users: <span style='color: #00f'>" + link)
+		}
 	}
 
 	PositionMixin { value: PositionMixin.Fixed; }
@@ -28,8 +31,7 @@ Rectangle {
 		Thread {
 			id: thread;
 
-			onSendMessage(msg): {
-			}
+			onSendMessage(msg): { }
 		}
 
 		ConnectPage {
