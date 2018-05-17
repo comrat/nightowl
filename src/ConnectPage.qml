@@ -45,7 +45,7 @@ Item {
 			onClicked: {
 				log("text", inviteText.text)
 				if (inviteText.text.length) {
-					this.parent.inviteText = true
+					this.parent.showOwnLabel = true
 					connectPageProto.pasteInvite(inviteText.text)
 				}
 			}
@@ -56,7 +56,7 @@ Item {
 			horizontalAlignment: Text.AlignHCenter;
 			color: colorTheme.headColor;
 			font.pixelSize: 21;
-			text: qsTr("Send");
+			text: qsTr("Send this string to OP");
 			visible: parent.showOwnLabel;
 		}
 
@@ -69,5 +69,9 @@ Item {
 		}
 
 		onVisibleChanged: { if (value) this.showOwnLabel = false }
+	}
+
+	showAnswer(answer): {
+		userHostDescription.text = answer
 	}
 }

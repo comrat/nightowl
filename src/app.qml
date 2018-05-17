@@ -6,10 +6,17 @@ Rectangle {
 
 	Device { id: device; }
 
-	WorkArea { }
+	WorkArea {
+		id: workArea;
+
+		onFillOptions(options): { head.fillOptions(options) }
+	}
 
 	Head {
+		id: head;
+
 		onMenuPressed: { /*TODO: impl*/ }
+		onOptionChoosed(option): { workArea.chooseOption(option) }
 	}
 
 	onBackPressed: { _globals.closeApp() }

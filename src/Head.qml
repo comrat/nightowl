@@ -1,23 +1,35 @@
 Rectangle {
+	id: headProto;
 	signal menuPressed;
+	signal optionChoosed;
 	width: 100%;
 	height: 50;
 	color: colorTheme.headColor;
 
 	PositionMixin { value: PositionMixin.Fixed; }
 
-	WebItem {
-		width: height;
-		height: 100%;
+	ListModel { id: optionsModel; }
 
-		Image {
-			x: 13%;
-			y: 13%;
-			width: 74%;
-			height: 74%;
-			source: "res/menu.png";
-		}
+	MenuButton {
+		icon: "res/menu.png";
 
 		onClicked: { this.parent.menuPressed() }
 	}
+
+	ListView {
+		width: contentWidth;
+		anchors.right: parent.right;
+		orientation: ListView.Horizontal;
+		height: 100%;
+		model: optionsModel;
+		delegate: MenuButton {
+			icon: model.icon;
+
+			// onClicked: { headProto.optionChoosed(this._local.model) }
+			onClicked: { headProto.optionChoosed(model) }
+		}
+	}
+
+	fillOptions(options): { optionsModel.append(options) }
+	clearOptions: { optionsModel.clear() }
 }

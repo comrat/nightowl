@@ -1,7 +1,7 @@
 Object {
 	signal message;
 	signal serverStarted;
-	property bool activeDataChannel;
+	signal answerReceived;
 
 	Base64 { id: base64; }
 
@@ -15,16 +15,14 @@ Object {
 		dataChannel.onopen = context.wrapNativeCallback(function(e) { log("Data channel opened", e) })
 		dataChannel.onmessage = context.wrapNativeCallback(function(e) {
 			if (e.data.size) {
-				//TODO: imple file transmission
-				// fileReceiver1.receive(e.data, {})
+				//TODO: imple file transmission e.data
 			} else {
 				if (e.data.charCodeAt(0) == 2)
 					return
 
 				var data = JSON.parse(e.data)
 				if (data.type === 'file') {
-					//TODO: imple file transmission
-					// fileReceiver1.receive(e.data, {})
+					//TODO: imple file transmission e.data
 				} else {
 					self.message(data)
 				}
@@ -41,6 +39,16 @@ Object {
 	pasteInvite(offer): {
 		var offerDesc = new RTCSessionDescription(JSON.parse(base64.decode(offer)))
 		log("Offer", offerDesc)
+		var clientHost = this._clientHost
+		clientHost.setRemoteDescription(offerDesc)
+		clientHost.createAnswer(
+			function(answerDesc) {
+				log("Answer", answerDesc)
+				clientHost.setLocalDescription(answerDesc)
+			},
+			function () { },
+			{ 'optional': [] }
+		)
 	}
 
 	onCompleted: {
@@ -56,7 +64,30 @@ Object {
 		})
 		this.activeDataChannel = false
 
-
 		this._clientHost = new RTCPeerConnection(cfg, con)
+		var clientHost = this._clientHost
+		clientHost.onicecandidate = this._context.wrapNativeCallback(function(e) {
+			log("onicecandidate client", e)
+			if (e.candidate == null)
+				self.answerReceived(base64.encode(JSON.stringify(serverHost.localDescription)))
+		})
+
+		clientHost.ondatachannel = this._context.wrapNativeCallback(function(e) {
+			var datachannel = e.channel || e;
+			self.activeDataChannel = datachannel
+			datachannel.onopen = function (e) { }
+			datachannel.onmessage = function (e) {
+				if (e.data.size) {
+					//TODO: imple file transmission e.data
+				} else {
+					var data = JSON.parse(e.data)
+					if (data.type === 'file') {
+						//TODO: imple file transmission e.data
+					} else {
+						self.message(data)
+					}
+				}
+			}
+		})
 	}
 }

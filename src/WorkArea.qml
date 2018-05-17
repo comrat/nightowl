@@ -1,4 +1,7 @@
 Rectangle {
+	id: workAreaProto;
+	signal fillOptions;
+	signal clearOptions;
 	property int maxWidth: 900;
 	y: 50;
 	width: parent.width > maxWidth ? maxWidth : parent.width;
@@ -10,9 +13,15 @@ Rectangle {
 		id: webRtc;
 
 		onMessage(message): { log("Msg", message) }
+
 		onServerStarted(link): {
 			log("Server started", link)
 			thread.receiveMessage("Share this string to invite users: <span style='color: #00f'>" + link)
+		}
+
+		onAnswerReceived(answer): {
+			log("AnswerReceived", answer)
+			connectPage.showAnswer(answer)
 		}
 	}
 
@@ -35,15 +44,25 @@ Rectangle {
 		}
 
 		ConnectPage {
+			id: connectPage;
+
 			onPasteInvite(invite): { webRtc.pasteInvite(invite) }
 		}
 
 		startThread: {
 			thread.serverSide = true
+			workAreaProto.fillOptions([{ 'icon': "res/share.png", 'action': "share" }, { 'icon': "res/add.png", 'action': "add" }])
 			this.currentIndex = 1
 			webRtc.createThread()
 		}
 
 		joinThread: { this.currentIndex = 2 }
+	}
+
+	chooseOption(option): {
+		switch(option) {
+			case "add": break
+			case "share": break
+		}
 	}
 }
