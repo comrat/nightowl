@@ -1,6 +1,7 @@
 Object {
 	signal message;
 	signal serverStarted;
+	signal userConnected;
 	signal answerReceived;
 
 	Base64 { id: base64; }
@@ -51,6 +52,14 @@ Object {
 		)
 	}
 
+	addUser(answer): {
+		var user = JSON.parse(base64.decode(answer))
+		var answerDesc = new RTCSessionDescription(user)
+		this._serverHost.setRemoteDescription(answerDesc)
+		log("User", user)
+		this.userConnected(user)
+	}
+
 	onCompleted: {
 		var cfg = { 'iceServers': [{'url': "stun:stun.gmx.net"}] }
 		var con = { 'optional': [{'DtlsSrtpKeyAgreement': true}] }
@@ -68,8 +77,9 @@ Object {
 		var clientHost = this._clientHost
 		clientHost.onicecandidate = this._context.wrapNativeCallback(function(e) {
 			log("onicecandidate client", e)
-			if (e.candidate == null)
-				self.answerReceived(base64.encode(JSON.stringify(serverHost.localDescription)))
+			if (e.candidate == null) {
+				self.answerReceived(base64.encode(JSON.stringify(clientHost.localDescription)))
+			}
 		})
 
 		clientHost.ondatachannel = this._context.wrapNativeCallback(function(e) {

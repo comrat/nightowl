@@ -26,21 +26,9 @@ Item {
 			backgroundColor: colorTheme.textArea;
 		}
 
-		WebItem {
-			width: 120;
-			height: 50;
-			color: colorTheme.accentColor;
+		TextButton {
 			anchors.horizontalCenter: parent.horizontalCenter;
-
-			Text {
-				width: 100%;
-				height: 100%;
-				verticalAlignment: Text.AlignVCenter;
-				horizontalAlignment: Text.AlignHCenter;
-				color: colorTheme.textColor;
-				text: "Generate";
-				font.pixelSize: 24;
-			}
+			text: "Generate";
 
 			onClicked: {
 				log("text", inviteText.text)

@@ -25,7 +25,6 @@ Rectangle {
 		delegate: MenuButton {
 			icon: model.icon;
 
-			// onClicked: { headProto.optionChoosed(this._local.model) }
 			onClicked: { headProto.optionChoosed(model) }
 		}
 	}

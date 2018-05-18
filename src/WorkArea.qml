@@ -2,6 +2,7 @@ Rectangle {
 	id: workAreaProto;
 	signal fillOptions;
 	signal clearOptions;
+	signal showAddDialog;
 	property int maxWidth: 900;
 	y: 50;
 	width: parent.width > maxWidth ? maxWidth : parent.width;
@@ -13,6 +14,8 @@ Rectangle {
 		id: webRtc;
 
 		onMessage(message): { log("Msg", message) }
+
+		userConnected(user): { thread.userConnected(user) }
 
 		onServerStarted(link): {
 			log("Server started", link)
@@ -59,9 +62,18 @@ Rectangle {
 		joinThread: { this.currentIndex = 2 }
 	}
 
+	addUser(userAnswer): {
+		webRtc.addUser(userAnswer)
+	}
+
 	chooseOption(option): {
-		switch(option) {
-			case "add": break
+		if (!option) {
+			log("Invalid option")
+			return
+		}
+
+		switch(option.action) {
+			case "add": log("Herad redd"); this.showAddDialog(); break
 			case "share": break
 		}
 	}

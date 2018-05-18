@@ -9,6 +9,7 @@ Rectangle {
 	WorkArea {
 		id: workArea;
 
+		onShowAddDialog: { addDialog.show() }
 		onFillOptions(options): { head.fillOptions(options) }
 	}
 
@@ -17,6 +18,12 @@ Rectangle {
 
 		onMenuPressed: { /*TODO: impl*/ }
 		onOptionChoosed(option): { workArea.chooseOption(option) }
+	}
+
+	AddDialog {
+		id: addDialog;
+
+		onAddUser(userAnswer): { workArea.addUser(userAnswer) }
 	}
 
 	onBackPressed: { _globals.closeApp() }
