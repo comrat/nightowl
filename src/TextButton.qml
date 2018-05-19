@@ -1,11 +1,12 @@
 WebItem {
 	property string text;
-	width: 120;
+	width: innerButtonText.paintedWidth + 20;
 	height: 50;
 	color: colorTheme.accentColor;
 
 	Text {
-		width: 100%;
+		id: innerButtonText;
+		x: 10;
 		height: 100%;
 		verticalAlignment: Text.AlignVCenter;
 		horizontalAlignment: Text.AlignHCenter;

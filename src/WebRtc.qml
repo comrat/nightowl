@@ -3,6 +3,7 @@ Object {
 	signal serverStarted;
 	signal userConnected;
 	signal answerReceived;
+	property string currentUser;
 
 	Base64 { id: base64; }
 
@@ -38,8 +39,8 @@ Object {
 	}
 
 	pasteInvite(offer): {
-		var offerDesc = new RTCSessionDescription(JSON.parse(base64.decode(offer)))
-		log("Offer", offerDesc)
+		this.currentUser = offer.userName
+		var offerDesc = new RTCSessionDescription(JSON.parse(base64.decode(offer.answer)))
 		var clientHost = this._clientHost
 		clientHost.setRemoteDescription(offerDesc)
 		clientHost.createAnswer(
@@ -54,7 +55,8 @@ Object {
 
 	addUser(answer): {
 		var user = JSON.parse(base64.decode(answer))
-		var answerDesc = new RTCSessionDescription(user)
+		var description = user.desc
+		var answerDesc = new RTCSessionDescription(description)
 		this._serverHost.setRemoteDescription(answerDesc)
 		log("User", user)
 		this.userConnected(user)
@@ -76,9 +78,9 @@ Object {
 		this._clientHost = new RTCPeerConnection(cfg, con)
 		var clientHost = this._clientHost
 		clientHost.onicecandidate = this._context.wrapNativeCallback(function(e) {
-			log("onicecandidate client", e)
+			log("onicecandidate client", e, "curr",self.currentUser)
 			if (e.candidate == null) {
-				self.answerReceived(base64.encode(JSON.stringify(clientHost.localDescription)))
+				self.answerReceived(base64.encode(JSON.stringify({desc:clientHost.localDescription,userName:self.currentUser})))
 			}
 		})
 

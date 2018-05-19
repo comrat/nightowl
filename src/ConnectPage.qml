@@ -6,7 +6,7 @@ Item {
 
 	Column {
 		property bool showOwnLabel;
-		y: 20;
+		y: 10;
 		width: 100%;
 		spacing: 10;
 
@@ -26,15 +26,37 @@ Item {
 			backgroundColor: colorTheme.textArea;
 		}
 
+		Row {
+			x: 5%;
+			width: 100%;
+			height: 35;
+			spacing: 10;
+
+			Text {
+				anchors.verticalCenter: parent.verticalCenter;
+				color: colorTheme.headColor;
+				font.pixelSize: 21;
+				text: qsTr("User name");
+			}
+
+			TextInput {
+				id: nameInput;
+				width: 60%;
+				anchors.verticalCenter: parent.verticalCenter;
+				font.pixelSize: 18;
+				backgroundColor: colorTheme.textArea;
+			}
+		}
+
 		TextButton {
 			anchors.horizontalCenter: parent.horizontalCenter;
-			text: "Generate";
+			text: "Generate answer";
 
 			onClicked: {
 				log("text", inviteText.text)
 				if (inviteText.text.length) {
 					this.parent.showOwnLabel = true
-					connectPageProto.pasteInvite(inviteText.text)
+					connectPageProto.pasteInvite({ answer: inviteText.text, userName: nameInput.text })
 				}
 			}
 		}

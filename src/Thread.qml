@@ -61,7 +61,7 @@ Item {
 
 	userConnected(user): {
 		log("userConnected", user)
-		messagesModel.append({ "newUser": user.remoteAddr ? user.remoteAddr : "Unknown user" })
+		messagesModel.append({ "newUser": user.userName ? user.userName : "Unknown user" })
 	}
 
 	getCurrentTime: {
