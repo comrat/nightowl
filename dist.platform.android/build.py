@@ -1,5 +1,5 @@
 {% extends "build.py" %}
 {% block plugins %}
 	{{ super() }}
-        os.system('cordova plugin add cordova-plugin-websocket-server')
+        os.system('cordova plugins add cordova-plugin-share')
 {% endblock %}

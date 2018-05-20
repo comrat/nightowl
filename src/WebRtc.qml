@@ -3,6 +3,7 @@ Object {
 	signal serverStarted;
 	signal userConnected;
 	signal answerReceived;
+	property string threadLink;
 	property string currentUser;
 
 	Base64 { id: base64; }
@@ -70,8 +71,10 @@ Object {
 		var self = this
 		serverHost.onicecandidate = this._context.wrapNativeCallback(function(e) {
 			log("onicecandidate", e)
-			if (e.candidate == null)
-				self.serverStarted(base64.encode(JSON.stringify(serverHost.localDescription)))
+			if (e.candidate == null) {
+				self.threadLink = base64.encode(JSON.stringify(serverHost.localDescription))
+				self.serverStarted(self.threadLink)
+			}
 		})
 		this.activeDataChannel = false
 

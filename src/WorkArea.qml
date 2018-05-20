@@ -74,7 +74,12 @@ Rectangle {
 
 		switch(option.action) {
 			case "add": log("Herad redd"); this.showAddDialog(); break
-			case "share": break
+			case "share":
+				if (window.navigator && window.navigator.share)
+					window.navigator.share("Invite to thread:\n" + webRtc.threadLink, "Share invite to your thread", "plain/text")
+				else
+					log("Share method is undefined, add cordova-plugin-share")
+				break
 		}
 	}
 }
