@@ -10,4 +10,6 @@ Object {
 	property Color textColor: "#ffffff";
 	property Color textArea: "#ffffff";
 	property Color bottomTextColor: "#cccccc";
+
+	property Color shadowColor: "#000d";
 }

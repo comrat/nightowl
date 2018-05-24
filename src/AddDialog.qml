@@ -1,10 +1,6 @@
-Rectangle {
+Dialog {
 	id: addDialogProto;
 	signal addUser;
-	width: 100%;
-	height: 100%;
-	color: "#000d";
-	visible: false;
 
 	Column {
 		y: 50;
@@ -38,15 +34,4 @@ Rectangle {
 			}
 		}
 	}
-
-	MenuButton {
-		height: 50;
-		anchors.right: parent.right;
-		icon: "res/close.png";
-
-		onClicked: { addDialogProto.hide() }
-	}
-
-	show: { this.visible = true }
-	hide: { this.visible = false }
 }
