@@ -6,7 +6,7 @@ WebItem {
 
 	Text {
 		id: innerButtonText;
-		x: 10;
+		x: (parent.width - width) / 2;
 		height: 100%;
 		verticalAlignment: Text.AlignVCenter;
 		horizontalAlignment: Text.AlignHCenter;

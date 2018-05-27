@@ -3,6 +3,7 @@ Rectangle {
 	signal fillOptions;
 	signal clearOptions;
 	signal showAddDialog;
+	signal showHintDialog;
 	property int maxWidth: 900;
 	y: 50;
 	width: parent.width > maxWidth ? maxWidth : parent.width;
@@ -19,7 +20,7 @@ Rectangle {
 
 		onServerStarted(link): {
 			log("Server started", link)
-			thread.receiveMessage("Share this string to invite users: <span style='color: #00f'>" + link)
+			workAreaProto.showHintDialog()
 		}
 
 		onAnswerReceived(answer): {
