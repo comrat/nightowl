@@ -6,6 +6,8 @@ Rectangle {
 
 	Device { id: device; }
 
+	JsonStorage { id: storage; }
+
 	WorkArea {
 		id: workArea;
 
@@ -31,7 +33,6 @@ Rectangle {
 		id: hintDialog;
 
 		onShare: {}
-		onDontShowAgain: {}
 	}
 
 	onBackPressed: { _globals.closeApp() }

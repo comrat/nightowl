@@ -1,7 +1,6 @@
 Dialog {
 	id: hintDialogProto;
 	signal share;
-	signal dontShowAgain;
 
 	Column {
 		y: 80;
@@ -34,7 +33,7 @@ Dialog {
 				text: "Don't show again";
 
 				onClicked: {
-					hintDialogProto.dontShowAgain()
+					storage.setValue("dontShowHintAgain", true)
 					hintDialogProto.hide()
 				}
 			}

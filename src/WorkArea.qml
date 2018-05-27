@@ -20,7 +20,14 @@ Rectangle {
 
 		onServerStarted(link): {
 			log("Server started", link)
-			workAreaProto.showHintDialog()
+			storage.getValueOrDefault(
+				"dontShowHintAgain",
+				function(value) {
+					if (!value)
+						workAreaProto.showHintDialog()
+				},
+				false
+			)
 		}
 
 		onAnswerReceived(answer): {
