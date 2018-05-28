@@ -15,6 +15,13 @@ Item {
 		spacing: 10;
 		model: messagesModel;
 		delegate: ThreadMessageDelegate { }
+
+		onContentHeightChanged: {
+			var ch = this.contentHeight
+			var h = this.height
+			if (ch - this.element.dom.scrollTop <= h + h / 2)
+				this.element.dom.scrollTo(0, this.element.dom.scrollHeight);
+		}
 	}
 
 	Rectangle {
