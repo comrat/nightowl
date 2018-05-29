@@ -3,6 +3,7 @@ Object {
 	signal serverStarted;
 	signal userConnected;
 	signal answerReceived;
+	signal connectionEstablished;
 	property string threadLink;
 	property string currentUser;
 
@@ -15,7 +16,7 @@ Object {
 		var context = this._context
 		this.activeDataChannel = dataChannel
 
-		dataChannel.onopen = context.wrapNativeCallback(function(e) { log("Data channel opened", e) })
+		dataChannel.onopen = context.wrapNativeCallback(function(e) { log("Data channel opened", e); dataChannel.send(JSON.stringify({ invite: true })); })
 		dataChannel.onmessage = context.wrapNativeCallback(function(e) {
 			if (e.data.size) {
 				//TODO: imple file transmission e.data
@@ -54,6 +55,8 @@ Object {
 		)
 	}
 
+	sendMessage(msg): { this.activeDataChannel.send(JSON.stringify({ message: msg, user: this.currentUser })); }
+
 	addUser(answer): {
 		var user = JSON.parse(base64.decode(answer))
 		var description = user.desc
@@ -76,22 +79,22 @@ Object {
 				self.serverStarted(self.threadLink)
 			}
 		})
-		this.activeDataChannel = false
+		this.activeDataChannel = null
 
 		this._clientHost = new RTCPeerConnection(cfg, con)
 		var clientHost = this._clientHost
 		clientHost.onicecandidate = this._context.wrapNativeCallback(function(e) {
-			log("onicecandidate client", e, "curr",self.currentUser)
+			log("onicecandidate client", e, "curr", self.currentUser)
 			if (e.candidate == null) {
-				self.answerReceived(base64.encode(JSON.stringify({desc:clientHost.localDescription,userName:self.currentUser})))
+				self.answerReceived(base64.encode(JSON.stringify({ desc: clientHost.localDescription, userName: self.currentUser })))
 			}
 		})
 
 		clientHost.ondatachannel = this._context.wrapNativeCallback(function(e) {
 			var datachannel = e.channel || e;
 			self.activeDataChannel = datachannel
-			datachannel.onopen = function (e) { }
-			datachannel.onmessage = function (e) {
+			datachannel.onopen = context.wrapNativeCallback(function (e) { log("Client datachannel opened") })
+			datachannel.onmessage = context.wrapNativeCallback(function (e) {
 				if (e.data.size) {
 					//TODO: imple file transmission e.data
 				} else {
@@ -99,10 +102,13 @@ Object {
 					if (data.type === 'file') {
 						//TODO: imple file transmission e.data
 					} else {
-						self.message(data)
+						if (data.invite)
+							self.connectionEstablished()
+						else
+							self.message(data)
 					}
 				}
-			}
+			})
 		})
 	}
 }

@@ -14,7 +14,9 @@ Rectangle {
 	WebRtc {
 		id: webRtc;
 
-		onMessage(message): { log("Msg", message) }
+		onMessage(messageData): { thread.receiveMessage(messageData.message, messageData.user) }
+
+		onConnectionEstablished: { contentStack.joinThread() }
 
 		userConnected(user): { thread.userConnected(user) }
 
@@ -44,14 +46,14 @@ Rectangle {
 		height: 100%;
 
 		StartPage {
-			onJoin: { contentStack.joinThread() }
+			onJoin: { contentStack.connectToThread() }
 			onCreate: { contentStack.startThread() }
 		}
 
 		Thread {
 			id: thread;
 
-			onSendMessage(msg): { }
+			onSendMessage(msg): { webRtc.sendMessage(msg) }
 		}
 
 		ConnectPage {
@@ -67,7 +69,8 @@ Rectangle {
 			webRtc.createThread()
 		}
 
-		joinThread: { this.currentIndex = 2 }
+		joinThread: { this.currentIndex = 1 }
+		connectToThread: { this.currentIndex = 2 }
 	}
 
 	addUser(userAnswer): {

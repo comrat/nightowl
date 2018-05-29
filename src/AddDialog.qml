@@ -25,6 +25,7 @@ Dialog {
 		}
 
 		TextButton {
+			width: 200;
 			anchors.horizontalCenter: parent.horizontalCenter;
 			text: "Add";
 

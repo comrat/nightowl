@@ -19,7 +19,9 @@ Item {
 		onContentHeightChanged: {
 			var ch = this.contentHeight
 			var h = this.height
-			if (ch - this.element.dom.scrollTop <= h + h / 2)
+			if (ch < h)
+				this.contentY = ch - h
+			else if (ch - this.element.dom.scrollTop <= h + h / 2)
 				this.element.dom.scrollTo(0, this.element.dom.scrollHeight);
 		}
 	}
@@ -59,11 +61,11 @@ Item {
 		}
 	}
 
-	receiveMessage(msg, user): {
-		if (user)
-			messagesModel.append({ "text": msg, "name": user.remoteAddr || user.name, "currentUser": false, "time": this.getCurrentTime() })
+	receiveMessage(msg, userName): {
+		if (userName)
+			messagesModel.append({ "text": msg, "name": userName, "currentUser": false, "time": this.getCurrentTime() })
 		else
-			messagesModel.append({ "text": msg, "name": "user", "currentUser": false, "time": this.getCurrentTime() })
+			messagesModel.append({ "text": msg, "name": "OP", "currentUser": false, "time": this.getCurrentTime() })
 	}
 
 	userConnected(user): {
