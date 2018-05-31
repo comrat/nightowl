@@ -26,26 +26,24 @@ Item {
 			backgroundColor: colorTheme.textArea;
 		}
 
-		Row {
+		Text {
+			id: nameLabel;
 			x: 5%;
-			width: 100%;
-			height: 35;
-			spacing: 10;
+			anchors.verticalCenter: parent.verticalCenter;
+			color: colorTheme.headColor;
+			font.pixelSize: 21;
+			text: qsTr("User name");
+		}
 
-			Text {
-				anchors.verticalCenter: parent.verticalCenter;
-				color: colorTheme.headColor;
-				font.pixelSize: 21;
-				text: qsTr("User name");
-			}
-
-			TextInput {
-				id: nameInput;
-				width: 60%;
-				anchors.verticalCenter: parent.verticalCenter;
-				font.pixelSize: 18;
-				backgroundColor: colorTheme.textArea;
-			}
+		TextInput {
+			id: nameInput;
+			anchors.left: nameLabel.right;
+			anchors.right: parent.right;
+			anchors.verticalCenter: parent.verticalCenter;
+			anchors.leftMargin: 10;
+			anchors.rightMargin: parent.width * 0.05;
+			font.pixelSize: 18;
+			backgroundColor: colorTheme.textArea;
 		}
 
 		TextButton {
