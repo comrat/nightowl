@@ -54,12 +54,14 @@ Rectangle {
 			id: thread;
 
 			onSendMessage(msg): { webRtc.sendMessage(msg) }
+			onBackPressed: { contentStack.gotoMain(); return true }
 		}
 
 		ConnectPage {
 			id: connectPage;
 
 			onPasteInvite(invite): { webRtc.pasteInvite(invite) }
+			onBackPressed: { contentStack.gotoMain(); return true }
 		}
 
 		startThread: {
@@ -69,6 +71,7 @@ Rectangle {
 			webRtc.createThread()
 		}
 
+		gotoMain: { this.currentIndex = 0 }
 		joinThread: { this.currentIndex = 1 }
 		connectToThread: { this.currentIndex = 2 }
 	}

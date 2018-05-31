@@ -29,6 +29,6 @@ Rectangle {
 		}
 	}
 
-	fillOptions(options): { optionsModel.append(options) }
+	fillOptions(options): { optionsModel.clear(); optionsModel.append(options) }
 	clearOptions: { optionsModel.clear() }
 }
