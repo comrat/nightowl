@@ -11,6 +11,7 @@ Rectangle {
 	WorkArea {
 		id: workArea;
 
+		onClearMenu: { head.clearOptions() }
 		onShowAddDialog: { addDialog.show() }
 		onShowHintDialog: { hintDialog.show() }
 		onFillOptions(options): { head.fillOptions(options) }
@@ -32,7 +33,7 @@ Rectangle {
 	HintDialog {
 		id: hintDialog;
 
-		onShare: {}
+		onShare: { workArea.share() }
 	}
 
 	onBackPressed: { _globals.closeApp() }

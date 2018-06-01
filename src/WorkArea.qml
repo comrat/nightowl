@@ -1,5 +1,6 @@
 Rectangle {
 	id: workAreaProto;
+	signal clearMenu;
 	signal fillOptions;
 	signal clearOptions;
 	signal showAddDialog;
@@ -66,18 +67,30 @@ Rectangle {
 
 		startThread: {
 			thread.serverSide = true
-			workAreaProto.fillOptions([{ 'icon': "res/share.png", 'action': "share" }, { 'icon': "res/add.png", 'action': "add" }])
+			workAreaProto.fillOptions([{ 'icon': "res/copy.png", 'action': "copy" }, { 'icon': "res/share.png", 'action': "share" }, { 'icon': "res/add.png", 'action': "add" }])
 			this.currentIndex = 1
 			webRtc.createThread()
 		}
 
-		gotoMain: { this.currentIndex = 0 }
+		gotoMain: { workAreaProto.clearMenu(); this.currentIndex = 0 }
 		joinThread: { this.currentIndex = 1 }
 		connectToThread: { this.currentIndex = 2 }
 	}
 
-	addUser(userAnswer): {
-		webRtc.addUser(userAnswer)
+	addUser(userAnswer): { webRtc.addUser(userAnswer) }
+
+	share: {
+		if (window.navigator && window.navigator.share)
+			window.navigator.share("Invite to thread:\n" + webRtc.threadLink, "Share invite to your thread", "plain/text")
+		else
+			log("Share method is undefined, add cordova-plugin-share")
+	}
+
+	copy: {
+		if (window.cordova && window.cordova.plugins && window.cordova.plugins.clipboard)
+			window.cordova.plugins.clipboard.copy(webRtc.threadLink);
+		else
+			log("Failed to copy to clipboard corresponded method is undefined")
 	}
 
 	chooseOption(option): {
@@ -88,12 +101,8 @@ Rectangle {
 
 		switch(option.action) {
 			case "add": this.showAddDialog(); break
-			case "share":
-				if (window.navigator && window.navigator.share)
-					window.navigator.share("Invite to thread:\n" + webRtc.threadLink, "Share invite to your thread", "plain/text")
-				else
-					log("Share method is undefined, add cordova-plugin-share")
-				break
+			case "copy": this.copy(); break
+			case "share": this.share(); break
 		}
 	}
 }
