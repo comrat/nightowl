@@ -8,6 +8,7 @@ Row {
 	IconButton {
 		anchors.verticalCenter: parent.verticalCenter;
 		icon: "res/create.png";
+		text: "Create thread";
 
 		onClicked: { this.parent.create() }
 	}
@@ -15,6 +16,7 @@ Row {
 	IconButton {
 		anchors.verticalCenter: parent.verticalCenter;
 		icon: "res/join.png";
+		text: "Join thread";
 
 		onClicked: { this.parent.join() }
 	}
