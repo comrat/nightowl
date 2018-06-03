@@ -77,6 +77,8 @@ Rectangle {
 		connectToThread: { this.currentIndex = 2 }
 	}
 
+	Notification { id: notificator; }
+
 	addUser(userAnswer): { webRtc.addUser(userAnswer) }
 
 	share: {
@@ -87,10 +89,16 @@ Rectangle {
 	}
 
 	copy: {
-		if (window.cordova && window.cordova.plugins && window.cordova.plugins.clipboard)
-			window.cordova.plugins.clipboard.copy(webRtc.threadLink);
-		else
+		if (window.cordova && window.cordova.plugins && window.cordova.plugins.clipboard) {
+			try {
+				window.cordova.plugins.clipboard.copy(webRtc.threadLink);
+				notificator.show("Link was copied to the clipboard")
+			} catch(e) {
+				log("Copy to clipboard failed", e)
+			}
+		} else {
 			log("Failed to copy to clipboard corresponded method is undefined")
+		}
 	}
 
 	chooseOption(option): {
