@@ -1,5 +1,5 @@
 # nightowl
-It will be p2p messanger when its done...
+WebRTC based p2p messanger. GUI is implemented with [PureQML](https://pureqml.com/). You can create or join existed thread.
 
 # Installation
 To build and install the app on your android device you need to install:
