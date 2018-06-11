@@ -26,24 +26,30 @@ Item {
 			backgroundColor: colorTheme.textArea;
 		}
 
-		Text {
-			id: nameLabel;
+		Row {
 			x: 5%;
-			anchors.verticalCenter: parent.verticalCenter;
-			color: colorTheme.headColor;
-			font.pixelSize: 21;
-			text: qsTr("User name");
-		}
+			width: 90%;
+			spacing: 10;
+			height: 50;
 
-		TextInput {
-			id: nameInput;
-			anchors.left: nameLabel.right;
-			anchors.right: parent.right;
-			anchors.verticalCenter: parent.verticalCenter;
-			anchors.leftMargin: 10;
-			anchors.rightMargin: parent.width * 0.05;
-			font.pixelSize: 18;
-			backgroundColor: colorTheme.textArea;
+			Text {
+				id: nameLabel;
+				anchors.verticalCenter: parent.verticalCenter;
+				color: colorTheme.headColor;
+				font.pixelSize: 21;
+				text: qsTr("User name");
+			}
+
+			TextInput {
+				id: nameInput;
+				anchors.left: nameLabel.right;
+				anchors.right: parent.right;
+				anchors.verticalCenter: parent.verticalCenter;
+				anchors.horizontalCenter: parent.horizontalCenter;
+				anchors.leftMargin: 10;
+				font.pixelSize: 18;
+				backgroundColor: colorTheme.textArea;
+			}
 		}
 
 		TextButton {
@@ -75,6 +81,29 @@ Item {
 			font.pixelSize: 18;
 			backgroundColor: colorTheme.textArea;
 		}
+
+		Row {
+			height: 50;
+			anchors.horizontalCenter: parent.horizontalCenter;
+			spacing: 10;
+
+			TextIconButton {
+				icon: "res/share.png";
+				text: "Share";
+
+				onClicked: {
+				}
+			}
+
+			TextIconButton {
+				icon: "res/copy.png";
+				text: "Copy";
+
+				onClicked: {
+				}
+			}
+		}
+
 
 		onVisibleChanged: { if (value) this.showOwnLabel = false }
 	}
