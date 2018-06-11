@@ -92,6 +92,10 @@ Item {
 				text: "Share";
 
 				onClicked: {
+					if (window.navigator && window.navigator.share)
+						window.navigator.share("Add this to invite user:\n" + userHostDescription.text, "Share invite to your thread", "plain/text")
+					else
+						log("Share method is undefined, add cordova-plugin-share")
 				}
 			}
 
@@ -100,6 +104,16 @@ Item {
 				text: "Copy";
 
 				onClicked: {
+					if (window.cordova && window.cordova.plugins && window.cordova.plugins.clipboard) {
+						try {
+							window.cordova.plugins.clipboard.copy(userHostDescription.text);
+							notificator.show("Link was copied to the clipboard")
+						} catch(e) {
+							log("Copy to clipboard failed", e)
+						}
+					} else {
+						log("Failed to copy to clipboard corresponded method is undefined")
+					}
 				}
 			}
 		}
