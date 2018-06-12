@@ -61,6 +61,8 @@ Rectangle {
 		ConnectPage {
 			id: connectPage;
 
+			onCopy(text): { workAreaProto.copy(text) }
+			onShare(text): { workAreaProto.share(text) }
 			onPasteInvite(invite): { webRtc.pasteInvite(invite) }
 			onBackPressed: { contentStack.gotoMain(); return true }
 		}
@@ -81,17 +83,17 @@ Rectangle {
 
 	addUser(userAnswer): { webRtc.addUser(userAnswer) }
 
-	share: {
+	share(text): {
 		if (window.navigator && window.navigator.share)
-			window.navigator.share("Invite to thread:\n" + webRtc.threadLink, "Share invite to your thread", "plain/text")
+			window.navigator.share("Invite to thread:\n" + (text ? text : webRtc.threadLink), "Share invite to your thread", "plain/text")
 		else
 			log("Share method is undefined, add cordova-plugin-share")
 	}
 
-	copy: {
+	copy(text): {
 		if (window.cordova && window.cordova.plugins && window.cordova.plugins.clipboard) {
 			try {
-				window.cordova.plugins.clipboard.copy(webRtc.threadLink);
+				window.cordova.plugins.clipboard.copy(text ? text : webRtc.threadLink);
 				notificator.show("Link was copied to the clipboard")
 			} catch(e) {
 				log("Copy to clipboard failed", e)
