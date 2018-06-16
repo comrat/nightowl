@@ -61,9 +61,18 @@ Rectangle {
 		ConnectPage {
 			id: connectPage;
 
+			onPasteInvite(invite): {
+				try {
+					webRtc.pasteInvite(invite)
+				} catch(e) {
+					notificator.show("Invalid invite text")
+				}
+			}
+
 			onCopy(text): { workAreaProto.copy(text) }
+			onError(text): { notificator.show(text) }
 			onShare(text): { workAreaProto.share(text) }
-			onPasteInvite(invite): { webRtc.pasteInvite(invite) }
+
 			onBackPressed: { contentStack.gotoMain(); return true }
 		}
 

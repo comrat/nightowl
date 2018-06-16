@@ -2,6 +2,7 @@ Item {
 	id: connectPageProto;
 	signal copy;
 	signal share;
+	signal error;
 	signal pasteInvite;
 	width: 100%;
 	height: 100%;
@@ -60,10 +61,10 @@ Item {
 
 			onClicked: {
 				log("text", inviteText.text)
-				if (inviteText.text.length) {
-					this.parent.showOwnLabel = true
+				if (inviteText.text.length && nameInput.text.length)
 					connectPageProto.pasteInvite({ answer: inviteText.text, userName: nameInput.text })
-				}
+				else
+					connectPageProto.error("Fill invite and user name")
 			}
 		}
 
@@ -82,6 +83,8 @@ Item {
 			anchors.horizontalCenter: parent.horizontalCenter;
 			font.pixelSize: 18;
 			backgroundColor: colorTheme.textArea;
+
+			onTextChanged: { this.parent.showOwnLabel = value }
 		}
 
 		Row {
