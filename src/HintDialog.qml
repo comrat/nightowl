@@ -1,29 +1,32 @@
 Dialog {
 	id: hintDialogProto;
 	signal share;
+	focus: true;
 
 	Column {
-		y: 80;
+		y: 100;
 		width: 100%;
 		spacing: 10;
 
 		Text {
-			width: 100%;
+			x: 5%;
+			width: 90%;
 			horizontalAlignment: Text.AlignHCenter;
 			color: colorTheme.textColor;
 			font.pixelSize: 21;
-			text: qsTr("Click here to share your thread");
+			wrapMode: Text.WordWrap;
+			text: qsTr("Choose one of the top menu item to copy, share invite to your thread or approve new user by its answer");
 		}
 
 		Column {
-			y: 40;
+			y: 20;
 			width: 250;
 			anchors.horizontalCenter: parent.horizontalCenter;
 			spacing: 10;
 
 			TextButton {
 				width: 100%;
-				text: "Ok";
+				text: "Got it";
 
 				onClicked: { hintDialogProto.hide() }
 			}
@@ -41,17 +44,11 @@ Dialog {
 	}
 
 	Image {
+		y: 55;
 		anchors.right: parent.right;
-		anchors.rightMargin: 48;
+		anchors.rightMargin: 68;
 		source: "res/pointer.png";
 	}
 
-	MenuButton {
-		height: 50;
-		anchors.right: parent.right;
-		anchors.rightMargin: 50;
-		icon: "res/share.png";
-
-		onClicked: { hintDialogProto.share() }
-	}
+	onBackPressed: { this.hide(); return true }
 }

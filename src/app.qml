@@ -17,23 +17,19 @@ Rectangle {
 		onFillOptions(options): { head.fillOptions(options) }
 	}
 
+	HintDialog { id: hintDialog; }
+
 	Head {
 		id: head;
 
 		onMenuPressed: { /*TODO: impl*/ }
-		onOptionChoosed(option): { workArea.chooseOption(option) }
+		onOptionChoosed(option): { hintDialog.hide(); workArea.chooseOption(option) }
 	}
 
 	AddDialog {
 		id: addDialog;
 
 		onAddUser(userAnswer): { workArea.addUser(userAnswer) }
-	}
-
-	HintDialog {
-		id: hintDialog;
-
-		onShare: { workArea.share() }
 	}
 
 	onBackPressed: { _globals.closeApp() }
