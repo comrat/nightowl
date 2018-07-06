@@ -14,4 +14,6 @@ Rectangle {
 
 	show: { this.visible = true }
 	hide: { this.visible = false }
+
+	onBackPressed: { this.hide(); return true }
 }

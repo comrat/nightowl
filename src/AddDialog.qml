@@ -6,6 +6,7 @@ Dialog {
 		y: 50;
 		width: 100%;
 		spacing: 10;
+		focus: true;
 
 		Text {
 			width: 100%;

@@ -49,6 +49,4 @@ Dialog {
 		anchors.rightMargin: 68;
 		source: "res/pointer.png";
 	}
-
-	onBackPressed: { this.hide(); return true }
 }
