@@ -107,7 +107,6 @@ Item {
 			}
 		}
 
-
 		onVisibleChanged: { if (value) this.showOwnLabel = false }
 	}
 

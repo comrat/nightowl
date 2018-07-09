@@ -10,6 +10,7 @@ Rectangle {
 
 	WorkArea {
 		id: workArea;
+		focus: !addDialog.visible && !hintDialog.visible;
 
 		onClearMenu: { head.clearOptions() }
 		onShowAddDialog: { addDialog.show() }
