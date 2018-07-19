@@ -9,7 +9,7 @@ To build and install the app on your android device you need to install:
 
 Then connect to your phone [via adb](https://developer.android.com/studio/command-line/adb). Run this command after that:
 
-`./smart-tv-deployer/smart-tv-deployer.py -p android`
+`./smart-tv-deployer/build.py -p android`
 
 If everything is fine you will see <i>uberpult</i> application on your android device.
 
