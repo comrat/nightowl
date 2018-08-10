@@ -1,6 +1,5 @@
 Rectangle {
 	id: headProto;
-	signal menuPressed;
 	signal optionChoosed;
 	width: 100%;
 	height: 50;
@@ -9,12 +8,6 @@ Rectangle {
 	PositionMixin { value: PositionMixin.Fixed; }
 
 	ListModel { id: optionsModel; }
-
-	MenuButton {
-		icon: "res/menu.png";
-
-		onClicked: { this.parent.menuPressed() }
-	}
 
 	ListView {
 		width: contentWidth;

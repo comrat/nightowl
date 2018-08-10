@@ -3,6 +3,7 @@ WebItem {
 	width: innerButtonText.paintedWidth + 20;
 	height: 50;
 	color: colorTheme.accentColor;
+	radius: 5;
 
 	Text {
 		id: innerButtonText;

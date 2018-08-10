@@ -4,6 +4,7 @@ WebItem {
 	width: innerButtonText.paintedWidth + height + 25;
 	height: 50;
 	color: colorTheme.accentColor;
+	radius: 5;
 
 	Image {
 		x: 5;
