@@ -6,8 +6,10 @@ Object {
 	signal connectionEstablished;
 	property string threadLink;
 	property string currentUser;
+	property string publicKey;
 
 	Base64 { id: base64; }
+	Crypto { id: crypto; }
 
 	createThread: {
 		var serverHost = this._serverHost
@@ -15,6 +17,9 @@ Object {
 		var self = this
 		var context = this._context
 		this.activeDataChannel = dataChannel
+
+		crypto.generateRsaKey("password")
+		this.publicKey = crypto.getPublicKey()
 
 		dataChannel.onopen = context.wrapNativeCallback(function(e) { log("Data channel opened", e); dataChannel.send(JSON.stringify({ invite: true })); })
 		dataChannel.onmessage = context.wrapNativeCallback(function(e) {
@@ -28,6 +33,7 @@ Object {
 				if (data.type === 'file') {
 					//TODO: imple file transmission e.data
 				} else {
+					data.message = crypto.decrypt(data.message)
 					self.message(data)
 				}
 			}
@@ -42,7 +48,9 @@ Object {
 
 	pasteInvite(offer): {
 		this.currentUser = offer.userName
-		var offerDesc = new RTCSessionDescription(JSON.parse(base64.decode(offer.answer)))
+		var answer = JSON.parse(base64.decode(offer.answer))
+		this.publicKey = answer.publicKey
+		var offerDesc = new RTCSessionDescription(answer.desc)
 		var clientHost = this._clientHost
 		clientHost.setRemoteDescription(offerDesc)
 		clientHost.createAnswer(
@@ -55,7 +63,7 @@ Object {
 		)
 	}
 
-	sendMessage(msg): { this.activeDataChannel.send(JSON.stringify({ message: msg, user: this.currentUser })); }
+	sendMessage(msg): { this.activeDataChannel.send(JSON.stringify({ message: crypto.encrypt(msg, this.publicKey), user: this.currentUser })); }
 
 	addUser(answer): {
 		var user = JSON.parse(base64.decode(answer))
@@ -75,7 +83,7 @@ Object {
 		serverHost.onicecandidate = this._context.wrapNativeCallback(function(e) {
 			log("onicecandidate", e)
 			if (e.candidate == null) {
-				self.threadLink = base64.encode(JSON.stringify(serverHost.localDescription))
+				self.threadLink = base64.encode(JSON.stringify({ desc: serverHost.localDescription, publicKey: crypto.publicKey }))
 				self.serverStarted(self.threadLink)
 			}
 		})
@@ -102,10 +110,12 @@ Object {
 					if (data.type === 'file') {
 						//TODO: imple file transmission e.data
 					} else {
-						if (data.invite)
+						if (data.invite) {
 							self.connectionEstablished()
-						else
+						} else {
+							data.message = crypto.decrypt(data.message, this.publicKey)
 							self.message(data)
+						}
 					}
 				}
 			})
