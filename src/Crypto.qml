@@ -2,24 +2,19 @@ Object {
 	property string rsaKey;
 
 	generateRsaKey(passphrase, bits): {
-		//TODO: impl
 		var bitsCount = bits ? bits : 1024
-		this.rsaKey = ""
+		this.rsaKey = window.cryptico.generateRSAKey("test", bitsCount)
 	}
 
 	getPublicKey: {
-		//TODO: impl
-		// use this.rsaKey
-		return ""
+		return cryptico.publicKeyString(this.rsaKey)
 	}
 
 	encrypt(msg, publicKey): {
-		//TODO: impl
-		return msg
+		return cryptico.encrypt(msg, publicKey);
 	}
 
 	decrypt(msg, publicKey): {
-		//TODO: impl
-		return msg
+		return cryptico.decrypt(msg, publicKey);
 	}
 }
