@@ -33,7 +33,7 @@ Object {
 				if (data.type === 'file') {
 					//TODO: imple file transmission e.data
 				} else {
-					data.message = crypto.decrypt(data.message)
+					data.message = crypto.decrypt(data.message).plaintext
 					self.message(data)
 				}
 			}
@@ -63,7 +63,7 @@ Object {
 		)
 	}
 
-	sendMessage(msg): { this.activeDataChannel.send(JSON.stringify({ message: crypto.encrypt(msg, this.publicKey), user: this.currentUser })); }
+	sendMessage(msg): { this.activeDataChannel.send(JSON.stringify({ message: crypto.encrypt(msg, this.publicKey).cipher, user: this.currentUser })); }
 
 	addUser(answer): {
 		var user = JSON.parse(base64.decode(answer))
@@ -113,7 +113,7 @@ Object {
 						if (data.invite) {
 							self.connectionEstablished()
 						} else {
-							data.message = crypto.decrypt(data.message, this.publicKey)
+							data.message = crypto.decrypt(data.message).plaintext
 							self.message(data)
 						}
 					}
