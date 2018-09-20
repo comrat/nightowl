@@ -8,11 +8,18 @@ Object {
 		return window.cryptico.publicKeyString(this.rsaKey)
 	}
 
-	encrypt(msg, publicKey): {
-		return window.cryptico.encrypt(msg, publicKey);
+	encrypt(msg, publicKey, signWithRsa): {
+		if (signWithRsa)
+			return window.cryptico.encrypt(msg, publicKey, this.rsaKey);
+		else
+			return window.cryptico.encrypt(msg, publicKey);
 	}
 
 	decrypt(msg, publicKey): {
 		return window.cryptico.decrypt(msg, this.rsaKey);
+	}
+
+	getPublicKeyId(cipher): {
+		return window.cryptico.publicKeyID(cipher);
 	}
 }
