@@ -15,7 +15,7 @@ Object {
 			return window.cryptico.encrypt(msg, publicKey);
 	}
 
-	decrypt(msg, publicKey): {
+	decrypt(msg): {
 		return window.cryptico.decrypt(msg, this.rsaKey);
 	}
 

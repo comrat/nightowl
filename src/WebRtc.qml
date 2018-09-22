@@ -9,7 +9,17 @@ Object {
 	property string publicKey;
 
 	Base64 { id: base64; }
-	Crypto { id: crypto; }
+
+	Crypto {
+		id: crypto;
+		property string publicKey;
+		property string guestPublicKey;
+
+		onCompleted: {
+			this.generateRsaKey((Math.random() * 100500).toString())
+			this.publicKey = crypto.getPublicKey()
+		}
+	}
 
 	createThread: {
 		var serverHost = this._serverHost
@@ -17,9 +27,6 @@ Object {
 		var self = this
 		var context = this._context
 		this.activeDataChannel = dataChannel
-
-		crypto.generateRsaKey("password")
-		this.publicKey = crypto.getPublicKey()
 
 		dataChannel.onopen = context.wrapNativeCallback(function(e) { log("Data channel opened", e); dataChannel.send(JSON.stringify({ invite: true })); })
 		dataChannel.onmessage = context.wrapNativeCallback(function(e) {
@@ -49,7 +56,7 @@ Object {
 	pasteInvite(offer): {
 		this.currentUser = offer.userName
 		var answer = JSON.parse(base64.decode(offer.answer))
-		this.publicKey = answer.publicKey
+		crypto.guestPublicKey = answer.publicKey
 		var offerDesc = new RTCSessionDescription(answer.desc)
 		var clientHost = this._clientHost
 		clientHost.setRemoteDescription(offerDesc)
@@ -63,10 +70,11 @@ Object {
 		)
 	}
 
-	sendMessage(msg): { this.activeDataChannel.send(JSON.stringify({ message: crypto.encrypt(msg, this.publicKey).cipher, user: this.currentUser })); }
+	sendMessage(msg): { this.activeDataChannel.send(JSON.stringify({ message: crypto.encrypt(msg, crypto.guestPublicKey, true).cipher, user: this.currentUser })); }
 
 	addUser(answer): {
 		var user = JSON.parse(base64.decode(answer))
+		crypto.guestPublicKey = user.publicKey
 		var description = user.desc
 		var answerDesc = new RTCSessionDescription(description)
 		this._serverHost.setRemoteDescription(answerDesc)
@@ -94,7 +102,7 @@ Object {
 		clientHost.onicecandidate = this._context.wrapNativeCallback(function(e) {
 			log("onicecandidate client", e, "curr", self.currentUser)
 			if (e.candidate == null) {
-				self.answerReceived(base64.encode(JSON.stringify({ desc: clientHost.localDescription, userName: self.currentUser })))
+				self.answerReceived(base64.encode(JSON.stringify({ desc: clientHost.localDescription, userName: self.currentUser, publicKey: crypto.publicKey })))
 			}
 		})
 
